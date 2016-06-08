@@ -1,2 +1,2 @@
-ofxDmtrUI
 ofxXmlSettings
+ofxDmtrUI

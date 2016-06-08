@@ -1,0 +1,6 @@
+example2/bin/
+example2/obj/
+exampleText/obj/
+*.opendb
+*.db
+exampleText/bin/
