@@ -641,7 +641,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 				tp.img.draw(0,0);
 			}
 			tp.fbo.end();
-			allPresets.presets.push_back(tp);
+			allPresets.presetList.push_back(tp);
 
 			if (a%cols==(cols-1)) {
 				x = flow.x;
@@ -985,8 +985,8 @@ void	 ofxDmtrUI::uiEvents(string & e) {
 
 		if (_fbo != NULL) {
 			ofFbo fboThumb;
-			float w = allPresets.presets[0].fbo.getWidth();
-			float h = allPresets.presets[0].fbo.getHeight();
+			float w = allPresets.presetList[0].fbo.getWidth();
+			float h = allPresets.presetList[0].fbo.getHeight();
 			float aspectThumb = w / (float)h;
 			float aspectFbo = _fbo->getWidth() / (float)_fbo->getHeight();
 			float neww = w;
@@ -1002,23 +1002,23 @@ void	 ofxDmtrUI::uiEvents(string & e) {
 			}
 			// este fbo nao precisa.
 
-			allPresets.presets[slot].fbo.begin();
+			allPresets.presetList[slot].fbo.begin();
 //			fboThumb.allocate(w, h, GL_RGBA);
 //			fboThumb.begin();
 			ofClear(0);
 			ofSetColor(255);
 			_fbo->draw(offx, offy, neww,h);
-			allPresets.presets[slot].fbo.end();
+			allPresets.presetList[slot].fbo.end();
 			//fboThumb.end();
 
 			ofPixels pixels;
 			pixels.allocate( w, h, OF_IMAGE_COLOR_ALPHA);
-			allPresets.presets[slot].fbo.readToPixels(pixels);
+			allPresets.presetList[slot].fbo.readToPixels(pixels);
 			string imgPath = presetsFolder + UINAME + ofToString(slot) + ".tif";
 			//cout << "save: " + imgPath << endl;
 			ofSaveImage(pixels, imgPath);
 			allPresets.draw();
-			allPresets.presets[slot].img.setFromPixels(pixels);
+			allPresets.presetList[slot].img.setFromPixels(pixels);
 		}
 
 	}
@@ -1091,8 +1091,8 @@ void ofxDmtrUI::loadPreset(int n) {
 //	redraw = true;
 	//re();
 	//cout << allPresets.valor << endl;
-	//allPresets.presets[allPresets.valor].selecionado = false;
-	//allPresets.presets[n].selecionado = true;
+	//allPresets.presetList[allPresets.valor].selecionado = false;
+	//allPresets.presetList[n].selecionado = true;
 }
 
 //--------------------------------------------------------------

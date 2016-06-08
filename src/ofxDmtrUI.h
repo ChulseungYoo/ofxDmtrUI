@@ -85,7 +85,7 @@ public:
 			ofNotifyEvent(uiEvent, ev, this);
 		}
 
-		// não sei se é boa idéia aqui... ou somente usar 90 graus em tudo...
+		// não sei se ?boa idéia aqui... ou somente usar 90 graus em tudo...
 		if (vert) {
 			valorPixels = ofClamp(rect.height - (y - rect.y), 0, rect.height);
 			
@@ -369,7 +369,7 @@ public:
 
 	string nome;
 	ofRectangle rect;
-	vector <preset> presets;
+	vector<preset> presetList;
 	int	*_val;
 	// temporario
 	int valor = -1;
@@ -380,7 +380,7 @@ public:
 //		ofSetColor(130);
 //		ofDrawRectangle(rect);
 //		ofSetColor(255);
-		for (auto & p : presets) {
+		for (auto & p : presetList) {
 			p.draw();
 		}
 	}
@@ -392,26 +392,26 @@ public:
 	void set(int slot) {
 		//cout << "set : " + ofToString(slot) << endl;
 		if (valor != -1) {
-			presets[valor].selecionado = false;
-			presets[valor].draw();
+			presetList[valor].selecionado = false;
+			presetList[valor].draw();
 		}
-		if (presets.size() > 0) {
+		if (presetList.size() > 0) {
 			valor = slot;
-			presets[valor].selecionado = true;
-			presets[valor].draw();
+			presetList[valor].selecionado = true;
+			presetList[valor].draw();
 		}
 
 
 	}
 
 	void checkMouse(int x, int y) {
-		for (auto & p : presets) {
+		for (auto & p : presetList) {
 			if (p.rect.inside(x,y)) {
 				// only trigger events if clicked in different preset slot
 				if (ofGetKeyPressed(OF_KEY_COMMAND)) {
 					if (valor != -1) {
-						presets[valor].selecionado = false;
-						presets[valor].draw();
+						presetList[valor].selecionado = false;
+						presetList[valor].draw();
 					}
 					valor = p.index;
 					p.selecionado = true;
@@ -421,8 +421,8 @@ public:
 				} else {
 					if (valor != p.index) {
 						if (valor != -1) {
-							presets[valor].selecionado = false;
-							presets[valor].draw();
+							presetList[valor].selecionado = false;
+							presetList[valor].draw();
 						}
 						valor = p.index;
 						p.selecionado = true;
@@ -547,21 +547,21 @@ public:
 	}
 	void (*_functionPointer);
 };
-
+#if 0
 void funcao() {
 	cout << "funcao" << endl;
 }
-
+#endif
 
 class ofxDmtrUI : public ofBaseApp
 {
 public:
-	void		setup();
-	void		keyPressed(int key);
-	void		keyReleased(int key);
-	void		update();
-	void		draw();
-	void		exit();
+	void	setup();
+	void	keyPressed(int key);
+	void	keyReleased(int key);
+	void	update();
+	void	draw();
+	void	exit();
 	void 	mouseDragged(int x, int y, int button);
 	void 	mousePressed(int x, int y, int button);
 	void 	mouseReleased(int x, int y, int button);
@@ -602,12 +602,12 @@ public:
 	// only internal use to backup some variables.
 	map <string,float>			pFloatBak;
 
-	vector <slider> 	sliders;
-	vector <toggle> 	toggles;
-	vector <label> 	labels;
-	vector <radio> 	radios;
-	vector <slider2d> sliders2d;
-	vector <element> elements;
+	vector<slider> sliders;
+	vector<toggle> toggles;
+	vector<label> 	labels;
+	vector<radio> 	radios;
+	vector<slider2d> sliders2d;
+	vector<element> elements;
 
 
 
@@ -652,7 +652,7 @@ public:
 
 	map <string,float>			pEasy;
 	map <string,float>			pFloat;
-	map <string,int>				pInt;
+	map <string,int>			pInt;
 	map <string,bool>			pBool;
 	map <string,string>			pString;
 	map <string,string>			pLabel;
@@ -680,8 +680,8 @@ public:
 
 	//ofColor colunaBackground = ofColor(40,150);
 	ofColor colunaBackground = ofColor(0,100);
-	//ofRectangle coluna = ofRectangle(0,0,620,560);
-	ofRectangle coluna = ofRectangle(0,0,250,250);
+	ofRectangle coluna = ofRectangle(0,0,620,560);
+	//ofRectangle coluna = ofRectangle(0,0,250,250);
 
 	ofPoint presetDimensions = ofPoint(100,25);
 
