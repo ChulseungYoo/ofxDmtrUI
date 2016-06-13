@@ -34,7 +34,7 @@ enum flowDir {
 
 class elementList {
 public:
-	string nome;
+	string name;
 	string tipo;
 //	slider *_slider;
 //	toggle *_toggle;
@@ -43,7 +43,7 @@ public:
 
 class slider {
 public:
-	string 		nome;
+	string 		name;
 	ofRectangle rect;
 	bool 		inside = false;
 	ofColor 		cor;
@@ -77,11 +77,11 @@ public:
 
 		if (isInt) {
 			*_valInt = ofMap(valorPixels, 0, rect.width, min, max);
-			string ev = "updateInt_" + nome;
+			string ev = "updateInt_" + name;
 			ofNotifyEvent(uiEvent, ev, this);
 		} else {
 			*_val = ofMap(valorPixels, 0, rect.width, min, max);
-			string ev = "updateFloat_" + nome;
+			string ev = "updateFloat_" + name;
 			ofNotifyEvent(uiEvent, ev, this);
 		}
 
@@ -92,11 +92,11 @@ public:
 
 			if (isInt) {
 				*_valInt = ofMap(valorPixels, 0, rect.height, min, max);
-				string ev = "updateInt_" + nome;
+				string ev = "updateInt_" + name;
 				ofNotifyEvent(uiEvent, ev, this);
 			} else {
 				*_val = ofMap(valorPixels, 0, rect.height, min, max);
-				string ev = "updateFloat_" + nome;
+				string ev = "updateFloat_" + name;
 				ofNotifyEvent(uiEvent, ev, this);
 			}
 		}
@@ -110,10 +110,10 @@ public:
 		string ev;
 		if (isInt) {
 			*_valInt = v;
-			ev = "setInt_" + nome;
+			ev = "setInt_" + name;
 		} else {
 			*_val = v;
-			ev = "setFloat_" + nome;
+			ev = "setFloat_" + name;
 		}
 		valorPixels = ofMap(v, min, max, 0, rect.width);
 
@@ -138,7 +138,7 @@ public:
 			ofDrawRectangle(rect.x, rect.y + rect.height-valorPixels, rect.width, valorPixels);
 		} else {
 			ofDrawRectangle(rect.x, rect.y, valorPixels, rect.height);
-			string label = nome + " "+ofToString(isInt ? *_valInt : *_val);
+			string label = name + " "+ofToString(isInt ? *_valInt : *_val);
 			ofSetColor(0,128);
 			int offy = rect.height - 2;
 			ofDrawBitmapString(label, rect.x+11, rect.y+offy);
@@ -150,7 +150,7 @@ public:
 
 class toggle {
 public:
-	string 			nome;
+	string 			name;
 	ofRectangle 		rect;
 	bool 			inside = false;
 	ofColor 			cor;
@@ -164,7 +164,7 @@ public:
 
 	void flip() {
 		*_val = !*_val;
-		string ev = bang ? "bang_" + nome : "updateBool_" + nome;
+		string ev = bang ? "bang_" + name : "updateBool_" + name;
 		ofNotifyEvent(uiEvent, ev, this);
 	}
 
@@ -173,7 +173,7 @@ public:
 	void setValue(bool v) {
 		*_val = v;
 		// 19 de abril. vai atrapalhar?
-		string ev = "updateBool_" + nome;
+		string ev = "updateBool_" + name;
 		ofNotifyEvent(uiEvent, ev, this);
 	}
 
@@ -184,7 +184,7 @@ public:
 		// toggle Label
 		if (showLabel) {
 			ofSetColor(255);
-			ofDrawBitmapString(nome, rect.x + rect.width + 5, rect.y+16);
+			ofDrawBitmapString(name, rect.x + rect.width + 5, rect.y+16);
 		}
 
 		if (*_val) {
@@ -200,7 +200,7 @@ public:
 
 class label {
 public:
-	string 			nome;
+	string 			name;
 	ofRectangle 		rect;
 	ofColor 			cor;
 	string			*_val;
@@ -208,13 +208,13 @@ public:
 	void draw() {
 		ofSetColor(cor);
 		//ofDrawRectangle(rect);
-		ofDrawBitmapString(nome + " " + *_val, rect.x + 0, rect.y+15);
+		ofDrawBitmapString(name + " " + *_val, rect.x + 0, rect.y+15);
 	}
 };
 
 class radio  {
 public:
-	string 			nome;
+	string 			name;
 	ofRectangle 		rect;
 	ofColor 			cor;
 	string 			*_val;
@@ -241,12 +241,12 @@ public:
 	void setValue(string v, int notify = 0) {
 		*_val = v;
 		if (notify == 1) {
-			string ev = "updateRadio_" + nome;
+			string ev = "updateRadio_" + name;
 			ofNotifyEvent(uiEvent, ev, this);
 		}
 
 		if (notify == 2) {
-			string ev = "loadRadio_" + nome;
+			string ev = "loadRadio_" + name;
 			ofNotifyEvent(uiEvent, ev, this);
 		}
 	}
@@ -265,7 +265,8 @@ public:
 				else {
 					if (*_val != opcoes[i]) {
 						*_val = opcoes[i];
-						string ev = "updateRadio_" + nome;
+						string ev = "updateRadio_" + name;
+						cout << "Radio Event :" + name + ofToString(*_val) << endl;
 						ofNotifyEvent(uiEvent, ev, this);
 					}
 				}
@@ -343,7 +344,7 @@ public:
 class preset {
 public:
 	int index;
-	string nome;
+	string name;
 	ofRectangle	rect;
 	ofImage	img;
 	ofFbo fbo;
@@ -367,7 +368,7 @@ public:
 class presets {
 public:
 
-	string nome;
+	string name;
 	ofRectangle rect;
 	vector<preset> presetList;
 	int	*_val;
@@ -438,7 +439,7 @@ public:
 
 class color {
 public:
-	string nome;
+	string name;
 	float *_h;
 	float *_s;
 	float *_b;
@@ -452,7 +453,7 @@ public:
 
 //class fboelement {
 //public:
-//	string nome;
+//	string name;
 //	ofFbo *_fbo;
 //	bool fboSet;
 //	ofRectangle rect;
@@ -465,7 +466,7 @@ public:
 
 class slider2d {
 public:
-	string nome;
+	string name;
 	ofPoint	 *_val;
 //	float *_valx;
 //	float *_valy;
@@ -487,7 +488,7 @@ public:
 	void setValue(ofPoint xy) {
 		*_val = xy;
 		// UNIFICAR EVENTOS DEPOIS
-		string ev = "loadSlider2d_" + nome;
+		string ev = "loadSlider2d_" + name;
 		ofNotifyEvent(uiEvent, ev, this);
 	}
 
@@ -498,7 +499,7 @@ public:
 						ofClamp(ofMap(x, 0, rect.width, 0, 1), 0, 1),
 						ofClamp(ofMap(y, 0, rect.height, 0, 1), 0, 1)
 						);
-		string ev = "updateSlider2d_" + nome;
+		string ev = "updateSlider2d_" + name;
 		ofNotifyEvent(uiEvent, ev, this);
 	}
 
@@ -532,7 +533,7 @@ public:
 
 class element {
 public:
-	string nome;
+	string name;
 	string tipo;
 	//ofRectangle rect; // pointer?
 	ofRectangle *_rect;
@@ -547,11 +548,6 @@ public:
 	}
 	void (*_functionPointer);
 };
-#if 0
-void funcao() {
-	cout << "funcao" << endl;
-}
-#endif
 
 class ofxDmtrUI : public ofBaseApp
 {
@@ -582,16 +578,16 @@ public:
 	void		createFromText(string file);
 	void		createFromLine(string line);
 	// rename to createelement
-	void		create(string nome, string tipo="slider", string valores = "", string valores2 = ""); // NULL
+	void		create(string name, string tipo="slider", string valores = "", string valores2 = ""); // NULL
 	void		save(string xml);
 	void		load(string xml);
 	void		expires(int dataInicial, int dias = 10);
 	void		uiEvents(string & e);
 	void		autoFit();
 
-	void		setFloat(string nome, float val);
-	void		setBool(string nome, bool val);
-	void		setRadio(string nome, string val);
+	void		setFloat(string name, float val);
+	void		setBool(string name, bool val);
+	void		setRadio(string name, string val);
 
 	void		loadPreset(int n);
 	void		savePreset(int n);
@@ -656,7 +652,7 @@ public:
 	map <string,bool>			pBool;
 	map <string,string>			pString;
 	map <string,string>			pLabel;
-	map <string,ofPoint>			pPoint;
+	map <string,ofPoint>		pPoint;
 	map <string,ofFloatColor>	pColor;
 	// NOVO
 	map <string,string>			pFolder;
@@ -672,7 +668,7 @@ public:
 
 	vector <elementList> elementsList;
 
-	float getNoise(string nome, float a);
+	float getNoise(string name, float a);
 
 	void clear();
 

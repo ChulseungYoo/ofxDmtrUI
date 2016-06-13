@@ -15,20 +15,26 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ui.setup();
-	ui.createFromText("areiasliders.txt");
-	ui2.setup();
-	ui2.createFromText("master.txt");
+	ui.createFromText("sliders.txt");
+	ofSetCircleResolution(94);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofBackground(30);
+	ofSetColor(255);
+	float tempo = ofGetElapsedTimef();
+	float x = ofNoise(tempo/5.0 * ui.pEasy["DivNoiseX"])*ofGetWindowWidth();
+	float y = ofNoise(tempo/7.0 * ui.pEasy["DivNoiseY"])*ofGetWindowHeight();
+	float raio = 200;
+	ofSetColor(ui.pEasy["r"], ui.pEasy["g"], ui.pEasy["b"]);
+	ofDrawEllipse(x,y,raio,raio);
 }
 
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
+
 }
 
 //--------------------------------------------------------------

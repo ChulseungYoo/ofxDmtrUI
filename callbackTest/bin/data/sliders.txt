@@ -1,0 +1,38 @@
+label	ofxDmtrUI
+label	Code Dmtr.org 2016
+
+marginy	100
+label	First Column
+float	r	0 255 127
+float	g	0 255 127
+float	b	0 255 127
+radio	speed2shortcut	1 2 4 8
+
+float	DivNoiseX	0 1 .2
+float	DivNoiseY	0 1 .2
+bool	toggle1
+bool	toggle2
+bool	toggle3
+bool	ok	1
+bool	ok2	1
+
+newcol
+label	Second Column
+bool	toggle1c2
+bool	toggle2c2
+bool	toggle3c2
+bool	okc2	1
+bool	ok2c2	1
+float	slider1	0 1 0
+float	slider2	0 1 0
+radio	planeta	sol lua marte venus
+
+newcol
+label	Third Column
+bool	toggle1xx
+bool	ok44	1
+bool	ok23	1
+float	slider6	0 1 0
+float	slider7	0 1 0
+
+flowvert

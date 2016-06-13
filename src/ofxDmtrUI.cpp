@@ -107,22 +107,22 @@ void ofxDmtrUI::save(string xml){
 	ofxXmlSettings settings;
 	for (auto & s : sliders) {
 		if (s.isInt) {
-			settings.setValue(s.nome, *s._valInt);
+			settings.setValue(s.name, *s._valInt);
 		} else {
-			settings.setValue(s.nome, *s._val);
+			settings.setValue(s.name, *s._val);
 		}
 	}
 
 	for (auto & t : toggles) {
-		settings.setValue(t.nome, *t._val);
+		settings.setValue(t.name, *t._val);
 	}
 
 	for (auto & r : radios) {
 		// remover o selecionado totalmente?
-		//settings.setValue(r.nome, r.selecionado);
+		//settings.setValue(r.name, r.selecionado);
 
 		if (!r.multiple) {
-			settings.setValue(r.nome, *r._val);
+			settings.setValue(r.name, *r._val);
 		} else {
 			int i = 0;
 			for (auto & o : r.opcoes) {
@@ -135,8 +135,8 @@ void ofxDmtrUI::save(string xml){
 	// ainda nao sei se funciona
 	for (auto & e : sliders2d) {
 		ofPoint xy = *e._val;
-		settings.setValue(e.nome + "x", xy.x);
-		settings.setValue(e.nome + "y", xy.y);
+		settings.setValue(e.name + "x", xy.x);
+		settings.setValue(e.name + "y", xy.y);
 	}
 	settings.save(xml);
 }
@@ -147,17 +147,17 @@ void ofxDmtrUI::load(string xml){
 	ofxXmlSettings settings;
 	settings.loadFile(xml);
 	for (auto & e : sliders) {
-		e.setValue(settings.getValue(e.nome, e.def));
+		e.setValue(settings.getValue(e.name, e.def));
 	}
 	for (auto & e : toggles) {
-		e.setValue(settings.getValue(e.nome, e.def));
+		e.setValue(settings.getValue(e.name, e.def));
 	}
 
 	for (auto & e : radios) {
 		// default? algo como asterisco no txt? ou um parametro novo, um tab a mais.
-		//if (*e._val != settings.getValue(e.nome, ""))
+		//if (*e._val != settings.getValue(e.name, ""))
 		if (!e.multiple) {
-			e.setValue(settings.getValue(e.nome, ""), 2);
+			e.setValue(settings.getValue(e.name, ""), 2);
 		}
 
 		else {
@@ -171,8 +171,8 @@ void ofxDmtrUI::load(string xml){
 	}
 
 	for (auto & e : sliders2d) {
-		float x = settings.getValue(e.nome+"x", 0.0);
-		float y = settings.getValue(e.nome+"y", 0.0);
+		float x = settings.getValue(e.name+"x", 0.0);
+		float y = settings.getValue(e.name+"y", 0.0);
 		e.setValue(ofPoint(x, y));
 	}
 	redraw = true;
@@ -190,11 +190,11 @@ void ofxDmtrUI::keyPressed(int key){
 		if (key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' ||
 			key == '8' || key == '9' || key == '0'
 			) {
-			string nome = presetsFolder + UINAME + ofToString(char(key)) + ".xml";
+			string name = presetsFolder + UINAME + ofToString(char(key)) + ".xml";
 			if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-				save(nome);
+				save(name);
 			} else {
-				load(nome);
+				load(name);
 			}
 		}
 	}
@@ -394,9 +394,9 @@ void ofxDmtrUI::onKeyReleased(ofKeyEventArgs& data)
 void ofxDmtrUI::onMousePressed(ofMouseEventArgs& data)
 {
 	if (showGui) {
-		mousePressed				(data.x, data.y, data.button);
-		mouseAll					(data.x, data.y, data.button);
-		mousePressedDragged		(data.x, data.y, data.button);
+		mousePressed(data.x, data.y, data.button);
+		mouseAll(data.x, data.y, data.button);
+		mousePressedDragged(data.x, data.y, data.button);
 	}
 }
 
@@ -483,9 +483,9 @@ void ofxDmtrUI::createFromLine(string l) {
 
 		vector <string> cols = ofSplitString(l, "	");
 		string tipo = cols[0];
-		string nome = "";
+		string name = "";
 		if (cols.size()>1) {
-			nome = cols[1];
+			name = cols[1];
 		}
 
 		if (tipo == "float") tipo = "slider";
@@ -564,12 +564,12 @@ void ofxDmtrUI::createFromLine(string l) {
 			if (tipo.substr(0,1) != "#") { //comment
 				if (cols.size()>2) {
 					if (cols.size()==3)
-						create(nome, tipo, cols[2]);
+						create(name, tipo, cols[2]);
 					if (cols.size()==4)
-						create(nome, tipo, cols[2], cols[3]);
+						create(name, tipo, cols[2], cols[3]);
 
 				} else {
-					create(nome, tipo);
+					create(name, tipo);
 				}
 			}
 		}
@@ -578,14 +578,14 @@ void ofxDmtrUI::createFromLine(string l) {
 
 
 //--------------------------------------------------------------
-void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2) {
+void ofxDmtrUI::create(string name, string tipo, string valores, string valores2) {
 
 	// vamos tentar inventar uma variavel aqui nos parametros somente.
 	ofStringReplace(valores, "sliderWidth", ofToString(sliderWidth));
 
 	{
 		elementList t;
-		t.nome = nome;
+		t.name = name;
 		t.tipo = tipo;
 		elementsList.push_back(t);
 	}
@@ -603,8 +603,8 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 	if (tipo == "presets") {
 		int cols = 3;
 		int rows = 4;
-		if (nome != "") {
-			vector <string> vals = ofSplitString(nome, " ");
+		if (name != "") {
+			vector <string> vals = ofSplitString(name, " ");
 			cols = ofToInt(vals[0]);
 			rows = ofToInt(vals[1]);
 		}
@@ -622,7 +622,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		for (int a=0; a<cols * rows; a++) {
 			preset tp;
 			tp.index = a;
-			tp.nome = ofToString(a);
+			tp.name = ofToString(a);
 			tp.rect.x = x;
 			tp.rect.y = y;
 			tp.rect.width = w;
@@ -665,18 +665,18 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		rect.y = flow.y;
 		rect.width = sliderWidth;
 		if (tipo == "color") {
-			create(nome+"_r", "slider", "0 1 1");
-			sliders[indexElement[nome+"_r"]]._val = &pColor[nome].r;
-			create(nome+"_g", "slider", "0 1 1");
-			sliders[indexElement[nome+"_g"]]._val = &pColor[nome].g;
-			create(nome+"_b", "slider", "0 1 1");
-			sliders[indexElement[nome+"_b"]]._val = &pColor[nome].b;
-			create(nome+"_a", "slider", "0 1 1");
-			sliders[indexElement[nome+"_a"]]._val = &pColor[nome].a;
+			create(name+"_r", "slider", "0 1 1");
+			sliders[indexElement[name+"_r"]]._val = &pColor[name].r;
+			create(name+"_g", "slider", "0 1 1");
+			sliders[indexElement[name+"_g"]]._val = &pColor[name].g;
+			create(name+"_b", "slider", "0 1 1");
+			sliders[indexElement[name+"_b"]]._val = &pColor[name].b;
+			create(name+"_a", "slider", "0 1 1");
+			sliders[indexElement[name+"_a"]]._val = &pColor[name].a;
 		} else {
-			create(nome+"_h", "slider", "0 255 0");
-			create(nome+"_s", "slider", "0 255 255");
-			create(nome+"_b", "slider", "0 255 255");
+			create(name+"_h", "slider", "0 255 0");
+			create(name+"_s", "slider", "0 255 255");
+			create(name+"_b", "slider", "0 255 255");
 
 		}
 		rect.height = flow.y - rect.y;
@@ -689,7 +689,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 	else if (tipo == "slider2d" || tipo == "fbo") {
 		slider2d ts;
-		ts.nome = nome;
+		ts.name = name;
 		ts.cor = cor;
 		ts.rect = ofRectangle(flow.x, flow.y, sliderWidth, 50);
 		if (tipo == "fbo") {
@@ -702,21 +702,21 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 					ts.rect.height = ofToInt(vals[1]);
 			}
 		}
-//		ts._valx = &pPoint[nome].x;
-//		ts._valy = &pPoint[nome].y;
+//		ts._valx = &pPoint[name].x;
+//		ts._valy = &pPoint[name].y;
 
 
-		pPoint[nome] = ofPoint(.5, .5);
-		ts._val = &pPoint[nome];
+		pPoint[name] = ofPoint(.5, .5);
+		ts._val = &pPoint[name];
 		lastHeight = ts.rect.height;
 		lastWidth  = ts.rect.width;
-		indexElement[nome] = sliders2d.size();
+		indexElement[name] = sliders2d.size();
 		sliders2d.push_back(ts);
 	}
 
 	else if (tipo == "slider" || tipo == "int" || tipo == "sliderVert") {
 		slider ts;
-		ts.nome = nome;
+		ts.name = name;
 		ts.vert = (tipo == "sliderVert");
 
 
@@ -735,9 +735,9 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		ts.isInt = tipo == "int";
 
 		if (ts.isInt) {
-			ts._valInt = &pInt[ts.nome];
+			ts._valInt = &pInt[ts.name];
 		} else {
-			ts._val = &pFloat[ts.nome];
+			ts._val = &pFloat[ts.name];
 		}
 
 		//cout << "valores : " + valores << endl;
@@ -754,11 +754,11 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 			// for initialization without mouse.
 			ts.setValue(ts.def);
 		}
-		pFloat[nome] = ts.def;
+		pFloat[name] = ts.def;
 		if (ts.isInt) {
-			pInt[nome] = ts.def;
+			pInt[name] = ts.def;
 		}
-		indexElement[nome] = sliders.size();
+		indexElement[name] = sliders.size();
 
 		lastHeight = ts.rect.height;
 		lastWidth  = ts.rect.width;
@@ -778,7 +778,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 	else if (tipo == "toggle" || tipo == "bang" || tipo == "toggleNolabel") { // bool
 		toggle tt;
-		tt.nome = nome;
+		tt.name = name;
 		tt.rect = ofRectangle(flow.x, flow.y, sliderHeight, sliderHeight);
 		tt.cor = cor;
 		if (valores == "1") {
@@ -787,9 +787,9 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		if (tipo == "bang") {
 			tt.bang = true;
 		}
-		pBool[nome] = tt.def;
-		tt._val = &pBool[nome];
-		indexElement[nome] = toggles.size();
+		pBool[name] = tt.def;
+		tt._val = &pBool[name];
+		indexElement[name] = toggles.size();
 
 		if (tipo == "toggleNolabel") {
 			tt.showLabel = false;
@@ -800,8 +800,8 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 	else if (tipo == "label") {
 		label tl;
-		tl.nome = nome;
-		tl._val = &pLabel[nome];
+		tl.name = name;
+		tl._val = &pLabel[name];
 		tl.rect = ofRectangle(flow.x, flow.y, sliderWidth, sliderHeight);
 		tl.cor = cor;
 		labels.push_back(tl);
@@ -811,11 +811,11 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 	else if (tipo == "radio" || tipo == "radioMult") {
 		radio temp;
-		temp.nome = nome;
+		temp.name = name;
 		temp.rect = ofRectangle(flow.x, flow.y, sliderWidth, sliderHeight);
 		temp.cor = cor;
 		temp.opcoes = ofSplitString(valores, " ");
-		temp._val = &pString[nome];
+		temp._val = &pString[name];
 		if (tipo == "radioMult") {
 			temp.multiple = true;
 			for (auto & o : temp.opcoes) {
@@ -825,7 +825,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 			}
 		}
 		temp.init();
-		indexElement[nome] = radios.size();
+		indexElement[name] = radios.size();
 
 		radios.push_back(temp);
 		lastHeight = temp.rect.height;
@@ -844,7 +844,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 			}
 		}
 
-		pFolder[nome] = valores;
+		pFolder[name] = valores;
 
 		dir.listDir(valores);
 
@@ -855,12 +855,12 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		}
 
 		radio temp;
-		temp.nome = nome;
+		temp.name = name;
 		temp.rect = ofRectangle(flow.x, flow.y, sliderWidth, sliderHeight);
 		temp.cor = cor;
 		temp.opcoes = opcoes;
-		pString[nome] = "";
-		temp._val = &pString[nome];
+		pString[name] = "";
+		temp._val = &pString[name];
 		temp.init();
 		lastHeight = temp.rect.height;
 
@@ -878,8 +878,8 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 				createFromLine("flowVert");
 				createFromLine("flowHoriz");
 				for (int x=0; x<maxx; x++) {
-					string nomeElement = nome + ofToString(x) + ofToString(y);
-					create(nomeElement, "toggleNolabel");
+					string nameElement = name + ofToString(x) + ofToString(y);
+					create(nameElement, "toggleNolabel");
 				}
 			}
 			//createFromLine("flowVert");
@@ -891,20 +891,20 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 			valores = ".5 .1 .5 10";
 		}
 		vector <string> vals = ofSplitString(valores, " ");
-		createFromLine("label	"+nome);
-		createFromLine("float	"+nome+"NoiseSeed	0 1 " + vals[0]);
-		createFromLine("float	"+nome+"NoiseMin	-.2 1 " + vals[1]);
-		createFromLine("float	"+nome+"Noise	0 1.4 " + vals[2]);
-		createFromLine("float	"+nome+"NoiseMult	.1 30 " + vals[3]);
-		createFromLine("fbo	"+nome+"NoiseFbo	sliderWidth 30");
+		createFromLine("label	"+name);
+		createFromLine("float	"+name+"NoiseSeed	0 1 " + vals[0]);
+		createFromLine("float	"+name+"NoiseMin	-.2 1 " + vals[1]);
+		createFromLine("float	"+name+"Noise	0 1.4 " + vals[2]);
+		createFromLine("float	"+name+"NoiseMult	.1 30 " + vals[3]);
+		createFromLine("fbo	"+name+"NoiseFbo	sliderWidth 30");
 		lastHeight = 0;
 	}
 
 	else if (tipo == "sliderVertMatrix") {
-		createFromLine("label	" + nome);
+		createFromLine("label	" + name);
 		createFromLine("flowHoriz");
 		for (int a=0; a<ofToInt(valores); a++) {
-			createFromLine("sliderVert	" + nome + "_" + ofToString(a) + "	0 1 0");
+			createFromLine("sliderVert	" + name + "_" + ofToString(a) + "	0 1 0");
 		}
 		createFromLine("flowVert");
 		flow.y -= sliderWidth;
@@ -914,12 +914,12 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		flowing = false;
 		if (tipo == "_float") {
 			vector<string> vals = ofSplitString(valores," ");
-			pFloat[nome] = stof(vals[2]);
+			pFloat[name] = stof(vals[2]);
 		}
 
 		else if (tipo == "_int") {
 			vector<string> vals = ofSplitString(valores," ");
-			pInt[nome] = stof(vals[2]);
+			pInt[name] = stof(vals[2]);
 		}
 	}
 
@@ -955,7 +955,7 @@ void	 ofxDmtrUI::expires(int dataInicial, int dias) {
 }
 
 //--------------------------------------------------------------
-void	 ofxDmtrUI::uiEvents(string & e) {
+void ofxDmtrUI::uiEvents(string & e) {
 	//cout << e << endl;
 
 	if (ofIsStringInString(e, "loadPreset")) {
@@ -1026,20 +1026,20 @@ void	 ofxDmtrUI::uiEvents(string & e) {
 
 	if (ofIsStringInString(e, "shortcut") && !ofIsStringInString(e, "load")) {
 		vector <string> split = ofSplitString(e, "_");
-		string nome = split[1];
-		pFloat[nome] = ofToFloat(pString[nome + "_shortcut"]);
+		string name = split[1];
+		pFloat[name] = ofToFloat(pString[name + "_shortcut"]);
 	}
 	if (ofIsStringInString(e, "shortcutInt") && !ofIsStringInString(e, "load")) {
 		vector <string> split = ofSplitString(e, "_");
-		string nome = split[1];
-		pInt[nome] = ofToInt(pString[nome + "_shortcutInt"]);
+		string name = split[1];
+		pInt[name] = ofToInt(pString[name + "_shortcutInt"]);
 	}
 
 	ofNotifyEvent(uiEvent, e);
 }
 
 //--------------------------------------------------------------
-void	 ofxDmtrUI::autoFit() {
+void ofxDmtrUI::autoFit() {
 	float minX = 6666;
 	float minY = 6666;
 	float maxW = 0;
@@ -1062,29 +1062,29 @@ void	 ofxDmtrUI::autoFit() {
 
 
 //--------------------------------------------------------------
-void ofxDmtrUI::setFloat(string nome, float val) {
+void ofxDmtrUI::setFloat(string name, float val) {
 }
 
 //--------------------------------------------------------------
-void ofxDmtrUI::setBool(string nome, bool val) {
-	toggles[indexElement[nome]].setValue(val);
+void ofxDmtrUI::setBool(string name, bool val) {
+	toggles[indexElement[name]].setValue(val);
 	redraw = true;
 }
 
 //--------------------------------------------------------------
-void ofxDmtrUI::setRadio(string nome, string val) {
-//	cout << nome << endl;
-//	cout << indexElement[nome] << endl;
-//	cout << radios[indexElement[nome]].nome << endl;
+void ofxDmtrUI::setRadio(string name, string val) {
+//	cout << name << endl;
+//	cout << indexElement[name] << endl;
+//	cout << radios[indexElement[name]].name << endl;
 //	cout << "------" << endl;
-	radios[indexElement[nome]].setValue(val, true);
+	radios[indexElement[name]].setValue(val, true);
 	redraw = true;
 }
 
 //--------------------------------------------------------------
 void ofxDmtrUI::loadPreset(int n) {
-	string nome = presetsFolder + UINAME + ofToString(n) + ".xml";
-	load(nome);
+	string name = presetsFolder + UINAME + ofToString(n) + ".xml";
+	load(name);
 	presetLoaded = n;
 
 	allPresets.set(n);
@@ -1097,8 +1097,8 @@ void ofxDmtrUI::loadPreset(int n) {
 
 //--------------------------------------------------------------
 void ofxDmtrUI::savePreset(int n) {
-	string nome = presetsFolder + UINAME + ofToString(n) + ".xml";
-	save(nome);
+	string name = presetsFolder + UINAME + ofToString(n) + ".xml";
+	save(name);
 }
 
 
@@ -1140,7 +1140,7 @@ void ofxDmtrUI::clear() {
 }
 
 //--------------------------------------------------------------
-float ofxDmtrUI::getNoise(string nome, float a) {
-	return (pFloat[nome+"NoiseMin"] + ofNoise(pFloat[nome+"NoiseSeed"],
-	a * pEasy[nome+"NoiseMult"]) * pFloat[nome+"Noise"]);
+float ofxDmtrUI::getNoise(string name, float a) {
+	return (pFloat[name+"NoiseMin"] + ofNoise(pFloat[name+"NoiseSeed"],
+	a * pEasy[name+"NoiseMult"]) * pFloat[name+"Noise"]);
 }
