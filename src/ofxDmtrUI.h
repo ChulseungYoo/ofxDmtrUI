@@ -139,6 +139,7 @@ public:
 
 	ofEvent<string> uiEvent;
 	ofEvent<dmtrUIEvent> evento;
+	ofEvent<eventoNovo> eventoNovo;
 
 	ofEvent<vector <string> > uiEventMidi;
 	
@@ -267,4 +268,8 @@ public:
     vector <int> nextPreset;
 
 	int minimumWidth = 100;
+
+	//dmtrUIEvent sendEvent(string & nome, varType var, elementType element, eventoType tipo);
+
+	element * getElement(string & nome, elementType element);
 };

@@ -1960,3 +1960,28 @@ void ofxDmtrUI::createSoftwareFromText(string file) {
 	setFbo(fboTrails);
     
 }
+
+
+
+
+// 28 de maio. rascunho pro futuro - acho que provisorio.
+// nao da certo pq quem chama Ž dentro do class no UIElements.
+// estou logo escrevendo um substituto dentro do class
+
+//dmtrUIEvent ofxDmtrUI::sendEvent(string & nome, varType var, elementType element, eventoType tipo) { //string ui,
+//	dmtrUIEvent te;
+//	te._nome = &nome;
+//	te.tipo = UPDATE;
+//	te.element = element;
+//	te.tipo = tipo;
+//	te.var = var;
+//	return te;
+//}
+
+element * ofxDmtrUI::getElement(string & nome, elementType tipo) {
+	for (auto & e : elements) {
+		if (e.nome == nome && e.tipo == tipo) {
+			return &e;
+		}
+	}
+}

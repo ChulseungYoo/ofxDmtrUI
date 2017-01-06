@@ -78,10 +78,21 @@ public:
 	// 16 de julho de 2016
 	string msg;
 
+
+
 	elementType element;
 	eventoType tipo;
 	varType var = FLOAT;
-    
+
+	dmtrUIEvent (){};
+	//dmtrUIEvent (string & nome, varType var, elementType element, eventoType tipo) {};
+	dmtrUIEvent (string & n, varType v, elementType e, eventoType t) {
+		nome = n;
+		var = v;
+		element = e;
+		tipo = t;
+	};
+	//dmtrUIEvent sendEvent(string & nome, varType var, elementType element, eventoType tipo);
 
 	//ofxDmtrUI *_ui;
 	// unknown type name.
@@ -89,16 +100,6 @@ public:
 };
 
 
-// 28 de maio. rascunho pro futuro - acho que provisorio.
-//dmtrUIEvent sendEvent(string & nome, varType var, elementType element , eventoType tipo ) { //string ui,
-//	dmtrUIEvent te;
-//	te._nome = &nome;
-//	te.tipo = UPDATE;
-//	te.element = element;
-//	te.tipo = tipo;
-//	te.var = var;
-//	return te;
-//}
 
 class slider {
 public:
@@ -141,6 +142,7 @@ public:
 		labelOffsetY = rect.height/2 + 7;
 	}
 
+	// 30/12/2016 - nao sei pra que serve esta função.
 	void update(int x, int y) {
 		dmtrUIEvent te;
 		te.nome = nome;
@@ -208,9 +210,12 @@ public:
 				ofNotifyEvent(uiEvent, ev, this);
 			}
 
-			//		dmtrUIEvent e = sendEvent(nome, isInt ? INT : FLOAT, isInt ? SLIDERINT : SLIDER, SET);
-			//		ofNotifyEvent(evento, e, this);
 		}
+		// 29 de dez de 2016 - forma compacta de fazer o dmtrUIEvent.
+		dmtrUIEvent e = dmtrUIEvent(nome, isInt ? INT : FLOAT, isInt ? SLIDERINT : SLIDER, UPDATE);
+		ofNotifyEvent(evento, e, this);
+
+
 	}
 
 	//	void draw() {
@@ -579,9 +584,9 @@ public:
 		float x = mx - rect.x;
 		float y = my - rect.y;
 		*_val = ofPoint(
-						ofClamp(ofMap(x, 0, rect.width, 0, 1), 0, 1),
-						ofClamp(ofMap(y, 0, rect.height, 0, 1), 0, 1)
-						);
+			ofClamp(ofMap(x, 0, rect.width, 0, 1), 0, 1),
+			ofClamp(ofMap(y, 0, rect.height, 0, 1), 0, 1)
+		);
 
 
 		if (isColor) {
@@ -810,52 +815,63 @@ public:
 	presets *_presets = NULL;
 	slider2d *_slider2d = NULL;
 
-	//	void uiEvent(string & e) {
-	//		cout << "xxxx" + e << endl;
-	//	}
+	// fazer aqui o void get (multiplos returns)
 
-	void set (slider &e) {
+	// só funciona com c++ 14. cuidado
+	slider * getSlider() {
+		return _slider;
+	}
+	toggle * getToggle() {
+		return _toggle;
+	}
+//	auto * get(string nome, elementType tipo) {
+//		if (_slider != NULL) {
+//			return &_slider;
+//		}
+//		else if (_toggle != NULL) {
+//			return &_toggle;
+//		}
+//	}
+
+
+	void set(slider &e) {
 		nome = e.nome;
 		_rect = &e.rect;
 		_slider = &e;
 		// ou sliderint?
 		//tipo = SLIDER;
 		tipo = e.tipo;
-
-		//ofAddListener(e.uiEvent,this, &element::uiEvent);
 	}
 
-	void set (slider2d &e) {
+	void set(slider2d &e) {
 		nome = e.nome;
 		_rect = &e.rect;
 		_slider2d = &e;
 		tipo = SLIDER2D;
 	}
 
-	void set (presets &e) {
+	void set(presets &e) {
 		nome = e.nome;
 		_rect = &e.rect;
 		_presets = &e;
 		tipo = PRESETS;
 	}
 
-
-
-	void set (toggle &e) {
+	void set(toggle &e) {
 		nome = e.nome;
 		_rect = &e.rect;
 		_toggle = &e;
 		tipo = TOGGLE;
 	}
 
-	void set (label &e) {
+	void set(label &e) {
 		nome = e.nome;
 		_rect = &e.rect;
 		_label = &e;
 		tipo = LABEL;
 	}
 
-	void set (radio &e) {
+	void set(radio &e) {
 		nome = e.nome;
 		_rect = &e.rect;
 		_radio = &e;
@@ -879,3 +895,14 @@ public:
 		}
 	}
 };
+
+// não funciona pq o class slider ainda nao conhece o class element.
+class eventoNovo {
+public:
+	// seria lindo se funcionasse
+	//auto * _ponteiro = NULL;
+	element * _element = NULL;
+	elementType type;
+};
+
+
