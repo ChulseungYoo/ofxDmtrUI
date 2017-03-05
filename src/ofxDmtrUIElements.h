@@ -142,6 +142,10 @@ public:
 		labelOffsetY = rect.height/2 + 7;
 	}
 
+	void rand() {
+		setValue(ofRandom(min, max));
+	}
+
 	// 30/12/2016 - nao sei pra que serve esta função.
 	void update(int x, int y) {
 		dmtrUIEvent te;
@@ -751,6 +755,7 @@ public:
 	void checkMouse(int x, int y) {
 		for (auto & p : presets) {
 			if (p.rect.inside(x,y)) {
+				//cout << "click inside preset" << endl;
 				// only trigger events if clicked in different preset slot
 				if (ofGetKeyPressed(OF_KEY_CONTROL)) {
 					//
@@ -759,6 +764,7 @@ public:
 				}
 
 				if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+					//cout << "of key command save" << endl;
 					if (valor != -1) {
 						presets[valor].selecionado = false;
 						presets[valor].draw();
@@ -769,6 +775,7 @@ public:
 					ofNotifyEvent(uiEvent, ev, this);
 					p.draw();
 				} else {
+					//cout << "key command not pressed" << endl;
 					if (valor != p.index) {
 						if (valor != -1) {
 							presets[valor].selecionado = false;

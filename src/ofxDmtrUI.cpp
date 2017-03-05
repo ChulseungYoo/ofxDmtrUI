@@ -238,6 +238,19 @@ void ofxDmtrUI::keyPressed(int key){
 			if ((key == 'f' || key == 'F')) {
 				ofToggleFullscreen();
 			}
+			if ((key == 'd' || key == 'D')) {
+				ofToggleFullscreen();
+				//showGui = !showGui;
+
+				for (auto & u : allUIs) {
+					u->showGui = !u->showGui;
+				}
+
+				pFloat["fboScale"] = 1.0;
+				pInt["fboX"] = 0;
+				pInt["fboY"] = 0;
+
+			}
 		} else {
 			// fazer um map aqui
 			if (key == 'a' || key == 'A') {
@@ -627,6 +640,14 @@ void ofxDmtrUI::createFromLine(string l) {
 				uis[nome].createFromText("uiAll.txt");
 			}
 
+			if (tipo == "addUIDown") {
+				if (_uiLast != NULL) {
+					uis[nome].minimumWidth = _uiLast->coluna.width;
+				} else {
+					uis[nome].minimumWidth = coluna.width;
+				}
+			}
+			
 			string fileName = nome+".txt";
 			if (ofFile::doesFileExist(fileName)) {
 				uis[nome].createFromText(fileName);
@@ -647,9 +668,7 @@ void ofxDmtrUI::createFromLine(string l) {
 				}
 			}
 			uis[nome]._uiFather = this;
-			if (tipo == "addUIDown") {
-				uis[nome].minimumWidth = _uiLast->coluna.width;
-			}
+
 			_uiLast = &uis[nome];
 			uis[nome].setup();
 			uis[nome].autoFit();
@@ -1412,7 +1431,7 @@ void ofxDmtrUI::expires(int dataInicial, int dias) {
 	cout << "expira em " + ofToString(diasExpira) + " dias" << endl;
 	cout << "---------" << endl;
 	if (diasExpira < 0 || diasExpira > dias) {
-		ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial));
+		ofSystemAlertDialog("Dmtr.org Software Expired ~ " + ofToString(dataInicial) + "\rhttp://dmtr.org/");
 		std::exit(1);
 	}
 }
@@ -1875,10 +1894,11 @@ void ofxDmtrUI::downTo(ofxDmtrUI & uiNext) {
 	coluna.x = uiNext.coluna.x;
 	uiNext._uiUnder = this;
     
-//    if (_uiUnder != NULL) {
-//        _uiUnder->downTo(*this);
-//    }
-    if (_uiRight != NULL) {
+    if (_uiUnder != NULL) {
+        _uiUnder->downTo(*this);
+    }
+
+	if (_uiRight != NULL) {
         _uiRight->nextTo(*this);
     }
 }
