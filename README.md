@@ -1,10 +1,10 @@
 # ofxDmtrUI
 
-NOTICE
-Broken examples, they will be fixed soon.
+**NOTICE**  
+Broken examples, they will be fixed soon.  
 Project under rework, news soon  
-https://github.com/dimitre/ofxDmtrUI3  
-
+https://github.com/dimitre/ofxDmtrUI3   
+  
 Made to be really simple and lightweight.  
 It is my first public openFrameworks addon.  
 Requires oF 0.9+   
