@@ -548,6 +548,17 @@ vector <string> ofxDmtrUI::textToVector(string file) {
 }
 
 //--------------------------------------------------------------
+vector <string> ofxDmtrUI::textToVectorPipe(string file) {
+	return ofSplitString(ofBufferFromFile(file).getText(), "|");
+//	string s;
+//	ofBuffer buff2 = ofBufferFromFile(file);
+//	for(auto & line: buff2.getLines()) {
+//		s += line + "\r";
+//	}
+//	return ofSplitString(s, "|");
+}
+
+//--------------------------------------------------------------
 void ofxDmtrUI::createFromText(string file) {
 	if (ofFile::doesFileExist(file)) {
 		createdFromTextFile = file;
@@ -839,7 +850,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 
 	hue = int(flow.x * flowXhuefactor + flow.y * flowYhuefactor + hueStart)%255;
-	int saturation = bw ? 0 : 255;
+	int saturation = bw ? 0 : 200;
 //	int brightness = bw ? 50 : 200;
 	int brightness = bw ? 100 : 200;
 
@@ -1172,7 +1183,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 	// Aqui começam os tipos compostos
 
-	else if (tipo == "ints" || tipo == "floats" || tipo == "bools" || tipo == "bangs" || tipo == "holds") {
+	else if (tipo == "ints" || tipo == "floats" || tipo == "bools" || tipo == "bangs" || tipo == "holds" || tipo == "colors" || tipo == "slider2ds") {
 		vector <string> nomes = ofSplitString(nome, "[");
 		string n = nomes[0];
 		string intervalo = ofSplitString(nomes[1], "]")[0];
@@ -1185,6 +1196,8 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
             if (tipo == "bools") newTipo = "bool";
 			if (tipo == "bangs") newTipo = "bang";
 			if (tipo == "holds") newTipo = "hold";
+			if (tipo == "colors") newTipo = "color";
+			if (tipo == "slider2ds") newTipo = "slider2d";
 			createFromLine(newTipo + "	"+n + ofToString(a)+"	"+valores);
 		}
 	}
@@ -1304,11 +1317,26 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		createFromLine("_float	"+nome+"HRange	0 720 0");
 		createFromLine("_float	"+nome+"HRangeAudio	0 360 0");
 		createFromLine("_float	"+nome+"Alpha	0 255 255");
-
-		cout << "colorPaleta ::: " + nome << endl;
+		//cout << "colorPaleta ::: " + nome << endl;
 		colors.push_back(nome);
 		lastHeight = 0;
 	}
+
+	else if (tipo == "colorHue") {
+		createFromLine("_bool	"+nome+"UsaPaleta	0");
+		createFromLine("slider2d	"+nome+"Hsv	.5 .5");
+		createFromLine("float	"+nome+"S	0 255 255");
+		createFromLine("fbo	"+nome+"PaletaAtual	200 10");
+		createFromLine("_float	"+nome+"HRange	0 720 0");
+		createFromLine("_float	"+nome+"BStop	0 1 1");
+		createFromLine("_float	"+nome+"HRangeAudio	0 360 0");
+		createFromLine("_float	"+nome+"Alpha	0 255 255");
+
+		//cout << "colorHue ::: " + nome << endl;
+		colors.push_back(nome);
+		lastHeight = 0;
+	}
+
 
 	else if (tipo == "preview3d") {
 		string s =
@@ -1356,7 +1384,7 @@ bool	invertAudio	0)";
 		// 17 de julho de 2016, não sei se compila bem em outras plataformas.
 		string s =
 		R"(bool	audioOuBpm	0
-int	BPM	80 200 120
+int	BPM	1 200 120
 radio	ondaBeats	1 2 4 8
 radio	onda	s w ww r
 slider2d	freq
@@ -2004,4 +2032,59 @@ element * ofxDmtrUI::getElement(string & nome, elementType tipo) {
 			return &e;
 		}
 	}
+}
+
+
+
+//--------------------------------------------------------------
+ofColor ofxDmtrUI::getCor(float a, string nomecor) {
+	/*
+	ofColor cor;
+	ofPoint xy;
+	if (pBool[nomecor + "UsaPaleta"]) {
+		xy = pPoint[nomecor + "Paleta"];
+		if (paletas.size()) {
+			int qualPaleta = MIN(paletas.size()-1, xy.x * paletas.size());
+			float hue = (pEasy[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown);
+			int qualCor = MIN(int((a * hue/360.0f + xy.y) * paletas[qualPaleta].size()),paletas[qualPaleta].size()-1);
+			cor = paletas[qualPaleta][qualCor];
+			if (pEasy[nomecor+"BRange"]) {
+				cor *= (255.0 - MAX(0,(pEasy[nomecor+"BRange"] * a)))/255.0;
+			}
+			if (a > pEasy[nomecor+"BStop"]) {
+				cor = 0;
+			}
+		}
+	} else {
+		xy = pPoint[nomecor+"Hsv"];
+
+		float h = fmod(xy.x * 255.0 + (pFloat[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown) * a , 255.0);
+
+		if (pInt[nomecor+"HStep"]) {
+			h = fmod(r2f(
+						 ofPoint(xy.x * 255.0 + pFloat[nomecor+"HAudio"] * updown,
+								 xy.x * 255.0 + pFloat[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown
+								 ),
+						 a,
+						 pInt[nomecor+"HStep"]
+						 ), 255);
+		}
+		float s = pEasy[nomecor+"S"];
+		float b = pPoint[nomecor+"Hsv"].y * 255.0 - pEasy[nomecor+"BRange"] * a;
+
+		if (a > pEasy[nomecor+"BStop"]) {
+			b = 0;
+		}
+
+		//return ofColor::fromHsb(h,s,b);
+		cor = ofColor::fromHsb(h,s,b);
+	}
+	cor.a = pFloat[nomecor+"Alpha"] + pEasy[nomecor+"AlphaAudio"] * updown - pEasy[nomecor+"AlphaRange"] * a;
+
+	// teste pro Mareh2018
+	if (a > pEasy[nomecor+"BStop"]) {
+		cor.a = 0;
+	}
+	return cor;
+	*/
 }

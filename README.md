@@ -1,5 +1,10 @@
 # ofxDmtrUI
 
+NOTICE
+Broken examples, they will be fixed soon.
+Project under rework, news soon  
+https://github.com/dimitre/ofxDmtrUI3  
+
 Made to be really simple and lightweight.  
 It is my first public openFrameworks addon.  
 Requires oF 0.9+   
@@ -12,10 +17,10 @@ https://github.com/dimitre/ofxDmtrUIMidiController
 
 http://dmtr.org/ofxDmtrUI  
 
+
+
 ![Example](http://hifolio.com/media/1/Screen_Shot_2016-04-15_at_12.45.11_PM.png)
 
-Small Sister Project:
-https://github.com/dimitre/Cinder-DmtrUI
 
 
 ## Features

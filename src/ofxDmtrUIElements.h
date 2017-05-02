@@ -764,7 +764,7 @@ public:
 				}
 
 				if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-					//cout << "of key command save" << endl;
+					cout << "of key command save" << endl;
 					if (valor != -1) {
 						presets[valor].selecionado = false;
 						presets[valor].draw();
@@ -775,7 +775,8 @@ public:
 					ofNotifyEvent(uiEvent, ev, this);
 					p.draw();
 				} else {
-					//cout << "key command not pressed" << endl;
+
+					cout << "key command not pressed" << endl;
 					if (valor != p.index) {
 						if (valor != -1) {
 							presets[valor].selecionado = false;

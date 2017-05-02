@@ -103,6 +103,7 @@ public:
 	void setFboElement(string nome, ofFbo &fbo);
 
 	vector <string> textToVector(string file);
+	vector <string> textToVectorPipe(string file);
 
 	vector <slider> 	sliders;
 	vector <toggle> 	toggles;
@@ -272,4 +273,6 @@ public:
 	//dmtrUIEvent sendEvent(string & nome, varType var, elementType element, eventoType tipo);
 
 	element * getElement(string & nome, elementType element);
+
+	ofColor getCor(float a=0, string nome="cor");
 };
