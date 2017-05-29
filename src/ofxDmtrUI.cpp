@@ -1345,7 +1345,7 @@ _int	pointSize	1 4 2
 _float	bgPreview	0 255 60
 _float	bgPiso	0 255 40
 _float	lookX	-30 30 0
-float	lookY	0 20 1.7
+float	lookY	0 30 1.7
 _float	lookZ	-30 30 0
 _float	rotCamX	-360 360 0
 _float	rotCamZ	-360 360 0
@@ -1535,35 +1535,7 @@ void ofxDmtrUI::uiEventsNeu(dmtrUIEvent & e) {
 	}
 
 	if (e.nome == "presetsFolder") {
-		string newPresetsFolder = getPresetsFolder();
-		if (!ofFile::doesFileExist(newPresetsFolder)) {
-			if (!ofFile::doesFileExist("_presets")) {
-				ofDirectory::createDirectory("_presets");
-			}
-
-			ofDirectory::createDirectory(newPresetsFolder);
-		}
-		if (ofFile::doesFileExist(newPresetsFolder)) {
-			for (auto & p : allPresets.presets) {
-				p.fbo.begin();
-				ofClear(0,255);
-				int a = p.index;
-				string filename = getPresetsFolder() + ofToString(a) + ".tif";
-				ofSetColor(0);
-				ofDrawRectangle(0,0,p.fbo.getWidth(), p.fbo.getHeight());
-				if (ofFile::doesFileExist(filename)) {
-					p.img.load(filename);
-					p.img.draw(0,0);
-				} else {
-					p.img.clear();
-				}
-				p.fbo.end();
-			}
-			redraw = true;
-		} else {
-			cout << "Presets Folder Doesnt Exist : ";
-			cout << newPresetsFolder << endl;
-		}
+		changePresetsFolder();
 	}
 
 	else if (e.nome == "easing") {
@@ -1933,7 +1905,11 @@ void ofxDmtrUI::downTo(ofxDmtrUI & uiNext) {
 
 //--------------------------------------------------------------
 string ofxDmtrUI::getFileFullPath(string & nome) {
-	return pFolder[nome] + "/" + pString[nome];
+	if (pString[nome] != "") {
+		return pFolder[nome] + "/" + pString[nome];
+	} else {
+		return "";
+	}
 }
 
 //--------------------------------------------------------------
@@ -2087,4 +2063,38 @@ ofColor ofxDmtrUI::getCor(float a, string nomecor) {
 	}
 	return cor;
 	*/
+}
+
+//--------------------------------------------------------------
+
+void ofxDmtrUI::changePresetsFolder() {
+	string newPresetsFolder = getPresetsFolder();
+	if (!ofFile::doesFileExist(newPresetsFolder)) {
+		if (!ofFile::doesFileExist("_presets")) {
+			ofDirectory::createDirectory("_presets");
+		}
+
+		ofDirectory::createDirectory(newPresetsFolder);
+	}
+	if (ofFile::doesFileExist(newPresetsFolder)) {
+		for (auto & p : allPresets.presets) {
+			p.fbo.begin();
+			ofClear(0,255);
+			int a = p.index;
+			string filename = getPresetsFolder() + ofToString(a) + ".tif";
+			ofSetColor(0);
+			ofDrawRectangle(0,0,p.fbo.getWidth(), p.fbo.getHeight());
+			if (ofFile::doesFileExist(filename)) {
+				p.img.load(filename);
+				p.img.draw(0,0);
+			} else {
+				p.img.clear();
+			}
+			p.fbo.end();
+		}
+		redraw = true;
+	} else {
+		cout << "Presets Folder Doesnt Exist : ";
+		cout << newPresetsFolder << endl;
+	}
 }

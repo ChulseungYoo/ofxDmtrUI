@@ -275,4 +275,6 @@ public:
 	element * getElement(string & nome, elementType element);
 
 	ofColor getCor(float a=0, string nome="cor");
+
+	void changePresetsFolder();
 };

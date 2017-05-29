@@ -31,20 +31,6 @@
  */
 
 
-
-//namespace UI {
-//	vector <string> textToVector(string file) {
-//		vector <string> saida;
-//		ofBuffer buff2 = ofBufferFromFile(file);
-//		for(auto & line: buff2.getLines()) {
-//			saida.push_back(line);
-//		}
-//		return saida;
-//	}
-//}
-
-//#include "ofxDmtrUI.h"
-
 enum flowDir {
 	VERT, HORIZ, NO_FLOW
 };
@@ -764,7 +750,7 @@ public:
 				}
 
 				if (ofGetKeyPressed(OF_KEY_COMMAND)) {
-					cout << "of key command save" << endl;
+					//cout << "of key command save" << endl;
 					if (valor != -1) {
 						presets[valor].selecionado = false;
 						presets[valor].draw();
@@ -776,7 +762,7 @@ public:
 					p.draw();
 				} else {
 
-					cout << "key command not pressed" << endl;
+					//cout << "key command not pressed" << endl;
 					if (valor != p.index) {
 						if (valor != -1) {
 							presets[valor].selecionado = false;
