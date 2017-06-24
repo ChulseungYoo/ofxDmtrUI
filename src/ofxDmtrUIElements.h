@@ -292,6 +292,14 @@ public:
 		// 19 de abril. vai atrapalhar?
 		string ev = "loadBool_" + nome;
 		ofNotifyEvent(uiEvent, ev, this);
+
+		// 17 de junho de 2017
+		// fazer inicializador de dmtrUIEvent pelamor.
+		dmtrUIEvent te;
+		te.nome = nome;
+		te._nome = &nome;
+		te.var = BOOLEANO;
+		ofNotifyEvent(evento, te, this);
 	}
 	
 	void mouseRelease() {
@@ -345,6 +353,10 @@ public:
 
 class radio  {
 public:
+
+	// 24 june 2017 - webcams
+	int selectedId = -1;
+
 	string 			nome;
 	ofRectangle 		rect;
 	ofColor 			cor;
@@ -375,6 +387,8 @@ public:
 
 	int labelOffsetY;
 
+
+	//radio(string nome, );
 
 	void init() {
 		labelOffsetY = height/2 + 5;
@@ -460,6 +474,7 @@ public:
 
 				else {
 					if (*_val != opcoes[i]) {
+						selectedId = i;
 						*_val = opcoes[i];
 						string ev = "updateRadio_" + nome;
 						ofNotifyEvent(uiEvent, ev, this);

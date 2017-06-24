@@ -196,6 +196,7 @@ public:
 	float getNoise(string nome, float a);
 	void clear(bool keepVars = false);
 	void addAllListeners();
+
 	string getPresetsFolder();
 
 	ofBlendMode blendMode = OF_BLENDMODE_ALPHA;
@@ -277,4 +278,9 @@ public:
 	ofColor getCor(float a=0, string nome="cor");
 
 	void changePresetsFolder();
+
+
+	void addRadio(string name, vector<string> options, string sel = "");
+	void updateRadio(string name, vector<string> options, string sel = "");
+	ofColor cor;
 };

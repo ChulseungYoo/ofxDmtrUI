@@ -202,9 +202,10 @@ void ofxDmtrUI::load(string xml){
 
 		}
 		for (auto & e : sliders2d) {
-			float x = settings.getValue("slider2d:"+e.nome+":x", 0.0);
-			float y = settings.getValue("slider2d:"+e.nome+":y", 0.0);
 			if (e.isSlider) {
+				
+				float x = settings.getValue("slider2d:"+e.nome+":x", e.defx);
+				float y = settings.getValue("slider2d:"+e.nome+":y", e.defy);
 				e.setValue(ofPoint(x, y));
 			}
 		}
@@ -586,6 +587,10 @@ void ofxDmtrUI::createFromText(string file) {
 void ofxDmtrUI::addAllListeners() {
 	// end reading from text files
 	// remove uiEvents soon
+	//ofAddListener(uiEvent,this, &ofxDmtrUI::uiEvents);
+	//ofAddListener(evento ,this, &ofxDmtrUI::uiEventsNeu);
+
+
 	for (auto & e : sliders) {
 		ofAddListener(e.uiEvent,this, &ofxDmtrUI::uiEvents);
 		ofAddListener(e.evento ,this, &ofxDmtrUI::uiEventsNeu);
@@ -854,7 +859,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 //	int brightness = bw ? 50 : 200;
 	int brightness = bw ? 100 : 200;
 
-	ofColor cor = ofColor::fromHsb(hue,saturation,brightness);
+	cor = ofColor::fromHsb(hue,saturation,brightness);
 
 	lastHeight = sliderHeight;
 	lastWidth = sliderWidth;
@@ -917,9 +922,9 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		flow.y += allPresets.rect.height ;
 		lastHeight = 0;
 
-		element te;
-		te.set(tipo == "presets" ? allPresets : allPresets2);
-		elements.push_back(te);
+//		element te;
+//		te.set(tipo == "presets" ? allPresets : allPresets2);
+//		elements.push_back(te);
 	}
 
 	else if (tipo == "slider2d" || tipo == "fbo" ) {
@@ -938,6 +943,18 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 			}
 		} else {
 			pPoint[nome] = ofPoint(.5, .5);
+			vector<string> vals = ofSplitString(valores," ");
+			//cout << nome << endl;
+			if (valores != "") {
+				if (vals[0] != "") {
+					pPoint[nome].x = ofToFloat(vals[0]);
+					ts.defx = pPoint[nome].x;
+				}
+				if (vals[1] != "") {
+					pPoint[nome].y = ofToFloat(vals[1]);
+					ts.defy = pPoint[nome].y;
+				}
+			}
 			ts._val = &pPoint[nome];
 		}
 		lastHeight = ts.rect.height;
@@ -946,9 +963,9 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		sliders2dIndex[nome] = sliders2d.size();
 		sliders2d.push_back(ts);
 
-		element te;
-		te.set(sliders2d.back());
-		elements.push_back(te);
+//		element te;
+//		te.set(sliders2d.back());
+//		elements.push_back(te);
 	}
 
 	else if (tipo == "inspector" || tipo == "inspectorFloat" || tipo == "fps") {
@@ -1032,9 +1049,9 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		slidersIndex[nome] = sliders.size();
 		sliders.push_back(ts);
 
-		element te;
-		te.set(sliders.back());
-		elements.push_back(te);
+//		element te;
+//		te.set(sliders.back());
+//		elements.push_back(te);
 	}
 
 	else if (tipo == "toggle" || tipo == "bang" || tipo == "hold" || tipo == "toggleNolabel") { // bool
@@ -1067,10 +1084,10 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 		togglesMap[nome] = &toggles.back();
 
-		element te;
-		//te._toggle = &toggles.back();
-		te.set(toggles.back());
-		elements.push_back(te);
+//		element te;
+//		//te._toggle = &toggles.back();
+//		te.set(toggles.back());
+//		elements.push_back(te);
 	}
 
 	else if (tipo == "label") {
@@ -1089,9 +1106,9 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 		labels.push_back(tl);
 
-		element te;
-		te.set(labels.back());
-		elements.push_back(te);
+//		element te;
+//		te.set(labels.back());
+//		elements.push_back(te);
 
 		lastHeight = 20;
 	}
@@ -1128,10 +1145,6 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		radiosIndex[nome] = radios.size();
 
 		radios.push_back(temp);
-
-		element te;
-		te.set(radios.back());
-		elements.push_back(te);
 
 		lastHeight = temp.rect.height;
 	}
@@ -1175,9 +1188,9 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 
 		radios.push_back(temp);
 
-		element te;
-		te.set(radios.back());
-		elements.push_back(te);
+//		element te;
+//		te.set(radios.back());
+//		elements.push_back(te);
 		//flow.y += temp.rect.height - 25 + 5;
 	}
 
@@ -1549,7 +1562,6 @@ void ofxDmtrUI::uiEventsNeu(dmtrUIEvent & e) {
 	// vai precisar?
 	else if (e.nome == "loadPreset") {
 	}
-
 
 	ofNotifyEvent(evento, e);
 }
@@ -2014,55 +2026,55 @@ element * ofxDmtrUI::getElement(string & nome, elementType tipo) {
 
 //--------------------------------------------------------------
 ofColor ofxDmtrUI::getCor(float a, string nomecor) {
-	/*
-	ofColor cor;
-	ofPoint xy;
-	if (pBool[nomecor + "UsaPaleta"]) {
-		xy = pPoint[nomecor + "Paleta"];
-		if (paletas.size()) {
-			int qualPaleta = MIN(paletas.size()-1, xy.x * paletas.size());
-			float hue = (pEasy[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown);
-			int qualCor = MIN(int((a * hue/360.0f + xy.y) * paletas[qualPaleta].size()),paletas[qualPaleta].size()-1);
-			cor = paletas[qualPaleta][qualCor];
-			if (pEasy[nomecor+"BRange"]) {
-				cor *= (255.0 - MAX(0,(pEasy[nomecor+"BRange"] * a)))/255.0;
-			}
-			if (a > pEasy[nomecor+"BStop"]) {
-				cor = 0;
-			}
-		}
-	} else {
-		xy = pPoint[nomecor+"Hsv"];
 
-		float h = fmod(xy.x * 255.0 + (pFloat[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown) * a , 255.0);
-
-		if (pInt[nomecor+"HStep"]) {
-			h = fmod(r2f(
-						 ofPoint(xy.x * 255.0 + pFloat[nomecor+"HAudio"] * updown,
-								 xy.x * 255.0 + pFloat[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown
-								 ),
-						 a,
-						 pInt[nomecor+"HStep"]
-						 ), 255);
-		}
-		float s = pEasy[nomecor+"S"];
-		float b = pPoint[nomecor+"Hsv"].y * 255.0 - pEasy[nomecor+"BRange"] * a;
-
-		if (a > pEasy[nomecor+"BStop"]) {
-			b = 0;
-		}
-
-		//return ofColor::fromHsb(h,s,b);
-		cor = ofColor::fromHsb(h,s,b);
-	}
-	cor.a = pFloat[nomecor+"Alpha"] + pEasy[nomecor+"AlphaAudio"] * updown - pEasy[nomecor+"AlphaRange"] * a;
-
-	// teste pro Mareh2018
-	if (a > pEasy[nomecor+"BStop"]) {
-		cor.a = 0;
-	}
-	return cor;
-	*/
+//	ofColor cor;
+//	ofPoint xy;
+//	if (pBool[nomecor + "UsaPaleta"]) {
+//		xy = pPoint[nomecor + "Paleta"];
+//		if (paletas.size()) {
+//			int qualPaleta = MIN(paletas.size()-1, xy.x * paletas.size());
+//			float hue = (pEasy[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown);
+//			int qualCor = MIN(int((a * hue/360.0f + xy.y) * paletas[qualPaleta].size()),paletas[qualPaleta].size()-1);
+//			cor = paletas[qualPaleta][qualCor];
+//			if (pEasy[nomecor+"BRange"]) {
+//				cor *= (255.0 - MAX(0,(pEasy[nomecor+"BRange"] * a)))/255.0;
+//			}
+//			if (a > pEasy[nomecor+"BStop"]) {
+//				cor = 0;
+//			}
+//		}
+//	} else {
+//		xy = pPoint[nomecor+"Hsv"];
+//
+//		float h = fmod(xy.x * 255.0 + (pFloat[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown) * a , 255.0);
+//
+//		if (pInt[nomecor+"HStep"]) {
+//			h = fmod(r2f(
+//						 ofPoint(xy.x * 255.0 + pFloat[nomecor+"HAudio"] * updown,
+//								 xy.x * 255.0 + pFloat[nomecor+"HRange"] + pEasy[nomecor+"HRangeAudio"] * updown
+//								 ),
+//						 a,
+//						 pInt[nomecor+"HStep"]
+//						 ), 255);
+//		}
+//		float s = pEasy[nomecor+"S"];
+//		float b = pPoint[nomecor+"Hsv"].y * 255.0 - pEasy[nomecor+"BRange"] * a;
+//
+//		if (a > pEasy[nomecor+"BStop"]) {
+//			b = 0;
+//		}
+//
+//		//return ofColor::fromHsb(h,s,b);
+//		cor = ofColor::fromHsb(h,s,b);
+//	}
+//	cor.a = pFloat[nomecor+"Alpha"] + pEasy[nomecor+"AlphaAudio"] * updown - pEasy[nomecor+"AlphaRange"] * a;
+//
+//	// teste pro Mareh2018
+//	if (a > pEasy[nomecor+"BStop"]) {
+//		cor.a = 0;
+//	}
+//	return cor;
+//
 }
 
 //--------------------------------------------------------------
@@ -2097,4 +2109,30 @@ void ofxDmtrUI::changePresetsFolder() {
 		cout << "Presets Folder Doesnt Exist : ";
 		cout << newPresetsFolder << endl;
 	}
+}
+
+
+//--------------------------------------------------------------
+void ofxDmtrUI::addRadio(string name, vector<string> options, string sel) {
+	//create(name, "radio", options);
+	radio temp;
+	temp.nome = name;
+	temp.rect = ofRectangle(flow.x, flow.y, sliderWidth, sliderHeight);
+	temp.cor = cor;
+	temp.opcoes = options;
+	temp._val = &pString[name];
+	temp.height = sliderHeight;
+	temp.init();
+	radiosIndex[name] = radios.size();
+	lastHeight = temp.rect.height;
+
+	ofAddListener(temp.uiEvent,this, &ofxDmtrUI::uiEvents);
+	ofAddListener(temp.evento ,this, &ofxDmtrUI::uiEventsNeu);
+
+	radios.push_back(move(temp));
+}
+
+//--------------------------------------------------------------
+void ofxDmtrUI::updateRadio(string name, vector<string> options, string sel) {
+
 }
