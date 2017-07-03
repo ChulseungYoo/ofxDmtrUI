@@ -563,7 +563,6 @@ vector <string> ofxDmtrUI::textToVectorPipe(string file) {
 void ofxDmtrUI::createFromText(string file) {
 	if (ofFile::doesFileExist(file)) {
 		createdFromTextFile = file;
-		
 		if (debug) {
 			cout << "ofxDmtrUI createFromText ::: " + file << endl;
 		}
@@ -1113,6 +1112,7 @@ void ofxDmtrUI::create(string nome, string tipo, string valores, string valores2
 		lastHeight = 20;
 	}
 
+
 	else if (tipo == "radio" || tipo == "radioMult" || tipo == "radioText") {
 
 		radio temp;
@@ -1379,7 +1379,6 @@ _float	cameraZ	-50 50 20)";
 	}
 
 	else if (tipo == "audioControls") {
-		// 17 de julho de 2016, n‹o sei se compila bem em outras plataformas.
 		string s =
 		R"(slider2d	freq
 float	audioGanho	0.0 .5 0.25
@@ -1394,7 +1393,6 @@ bool	invertAudio	0)";
 	}
 
 	else if (tipo == "audioBpmControls") {
-		// 17 de julho de 2016, n‹o sei se compila bem em outras plataformas.
 		string s =
 		R"(bool	audioOuBpm	0
 int	BPM	1 200 120
@@ -2085,7 +2083,6 @@ void ofxDmtrUI::changePresetsFolder() {
 		if (!ofFile::doesFileExist("_presets")) {
 			ofDirectory::createDirectory("_presets");
 		}
-
 		ofDirectory::createDirectory(newPresetsFolder);
 	}
 	if (ofFile::doesFileExist(newPresetsFolder)) {
@@ -2130,6 +2127,17 @@ void ofxDmtrUI::addRadio(string name, vector<string> options, string sel) {
 	ofAddListener(temp.evento ,this, &ofxDmtrUI::uiEventsNeu);
 
 	radios.push_back(move(temp));
+
+	//if (flowing)
+	{
+		if (flowDirection == VERT) {
+			flow.y += lastHeight + sliderMargin;
+		}
+		if (flowDirection == HORIZ) {
+			flow.x += lastWidth + sliderMargin;
+			pFloat["maxWidthHorizontal"] = MAX(pFloat["maxWidthHorizontal"], flow.x);
+		}
+	}
 }
 
 //--------------------------------------------------------------
