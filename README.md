@@ -1,9 +1,6 @@
-# ofxDmtrUI
-
-**NOTICE**  
-This UI will be discontinued, use the new one instead:
-https://github.com/dimitre/ofxDmtrUI3  
-It was made to be 90% compatible with this one.
+# ofxDmtrUI [DISCONTINUED]
+use the new one instead:
+https://github.com/dimitre/ofxDmtrUI3 
 
 ———
   
