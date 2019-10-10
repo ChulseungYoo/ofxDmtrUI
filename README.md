@@ -1,6 +1,5 @@
-# ofxDmtrUI [DISCONTINUED]
-use the new one instead:
-https://github.com/dimitre/ofxMicroUI
+# [DISCONTINUED] use ofxMicroUI instead
+# https://github.com/dimitre/ofxMicroUI
 
 ———
   
