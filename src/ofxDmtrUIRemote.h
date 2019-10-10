@@ -2,7 +2,6 @@
 ofxDmtrUIRemote 
  Created by Dimitre Lima on 18/05/16.
  Copyright 2016 Dmtr.org. All rights reserved.
- Only for Dmtr.org projects use.
 */
 
 #pragma once
